@@ -23,6 +23,11 @@
 #include "scenarios/lom_novel/scenario_lom_novel.h"
 #endif
 
+#if defined(_CITADEL_)
+#include "scenarios/citadel/scenario_citadel.h"
+#endif
+
+
 namespace tme {
 #if defined(_DDR_)
     using character     = tme::scenarios::ddr::exports::character_t;

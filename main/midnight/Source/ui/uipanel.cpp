@@ -457,6 +457,8 @@ void uipanel::addMouseListener()
         }
         
         OnMouseMove(cursorPosition);
+        
+        return false;
     };
     
     _eventDispatcher->addEventListenerWithSceneGraphPriority(mouseEventListener, this);

@@ -757,7 +757,7 @@ mxthing_t mxmap::getLocationObject( const mxcharacter* c, mxgridref loc )
 {
     mxloc& l = GetAt ( loc );
     
-#if defined(_LOM_)
+#if defined(_LOM_) || defined(_CITADEL_)
     if (c->IsInTunnel() == l.IsTunnelObject()) {
         return (mxthing_t)l.object;
     } else {
@@ -944,7 +944,7 @@ bool mxloc::HasTunnelExit() const
     if ( HasTunnel() && (terrain >=TN_GATE && terrain <=TN_PALACE) )
         return true;
 #endif
-#if defined(_LOM_)
+#if defined(_LOM_) || defined(_CITADEL_)
     if ( HasTunnel() && (terrain == TN_CAVERN || terrain == TN_TOWER || terrain == TN_SNOWHALL) )
         return true;
 #endif
@@ -957,7 +957,7 @@ bool mxloc::HasTunnelEntrance() const
     if ( HasTunnel() && (terrain >=TN_GATE && terrain <=TN_PALACE) )
         return true;
 #endif
-#if defined(_LOM_)
+#if defined(_LOM_) || defined(_CITADEL_)
     if ( HasTunnel() && (terrain == TN_CAVERN || terrain == TN_TOWER || terrain == TN_SNOWHALL) )
         return true;
 #endif
@@ -967,7 +967,7 @@ bool mxloc::HasTunnelEntrance() const
 bool mxloc::IsTunnelObject() const
 {
     mxterrain_t t = mx->scenario->toScenarioTerrain((mxterrain_t)terrain);
-#if defined(_LOM_)
+#if defined(_LOM_) || defined(_CITADEL_)
     return HasTunnel() && (t ==TN_PLAINS || t==TN_MOUNTAIN || t==TN_FOREST || t==TN_DOWNS || t==TN_FROZENWASTE) ;
 #endif
     

@@ -17,6 +17,7 @@
 #include "../../baseinc/tme_internal.h"
 #include "scenario_lom_internal.h"
 
+#if defined(_LOM_)
 using namespace tme::scenarios ;
 
 namespace tme {
@@ -52,3 +53,4 @@ namespace tme {
     }
  
 } // namespace tme
+#endif

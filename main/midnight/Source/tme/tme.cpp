@@ -85,6 +85,27 @@ std::string TME_ScenarioShortName ( void )
 }
 #endif
 
+#if defined(_CITADEL_)
+std::string TME_ScenarioDirectory ( void )
+{
+    return ax::FileUtils::getInstance()->getDefaultResourceRootPath() + TME_ScenarioShortName();
+}
+
+std::string TME_ScenarioName ( void )
+{
+    std::string scenarioName("The Citadel") ;
+    return scenarioName;
+}
+
+std::string TME_ScenarioShortName ( void )
+{
+    std::string shortName("citadel");
+    return shortName ;
+}
+
+#endif
+
+
 std::string TME_GetSymbol( mxid id )
 {
     return mxi->EntitySymbolById(id);
@@ -996,7 +1017,7 @@ bool TME_Init ( mxscenarioid scenarioId, u64 flags, mxdifficulty_t difficulty, M
 #endif
 
 #if defined(_DDR_)
-    if ( scenarioId == mxscenarioid::DEFAULT || scenarioId == mxscenarioid::LOM ) {
+    if ( scenarioId == mxscenarioid::DEFAULT || scenarioId == mxscenarioid::DDR ) {
         if ( MXFAILED( tme::ddr::Create( mxi ) ) ) {
             return false;
         }
@@ -1005,6 +1026,18 @@ bool TME_Init ( mxscenarioid scenarioId, u64 flags, mxdifficulty_t difficulty, M
     }
 #endif
     
+
+#if defined(_CITADEL_)
+    if ( scenarioId == mxscenarioid::DEFAULT || scenarioId == mxscenarioid::CITADEL ) {
+        if ( MXFAILED( tme::citadel::Create( mxi ) ) ) {
+            return false;
+        }
+    } else {
+        return false;
+    }
+#endif
+   
+
     if ( afterCreate != nullptr ) {
         afterCreate();
     }

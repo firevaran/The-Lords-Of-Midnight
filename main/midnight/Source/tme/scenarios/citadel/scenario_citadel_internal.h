@@ -4,10 +4,9 @@
 #include "../../baseinc/tme_internal.h"
 #include "../default/default_scenario_internal.h"
 
-namespace tme {
+#if defined(_CITADEL_)
 
-    namespace scenarios {
-    
+namespace tme {
     class citadel_x : public mxscenario
     {
     public:
@@ -18,10 +17,8 @@ namespace tme {
         virtual MXRESULT Register ( mxengine* midnightx );
         virtual MXRESULT UnRegister ( mxengine* midnightx );    
     };
-
-    }
-    
 }
+#endif
 
 #endif //_CITADELSCENARIO_INTERNAL_H_INCLUDED_
 

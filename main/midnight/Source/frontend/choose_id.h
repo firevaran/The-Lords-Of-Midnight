@@ -12,7 +12,7 @@
 enum CHOOSE_INDEX {
     CHOOSE_THINK    = 0,
     
-#if defined(_LOM_)
+#if defined(_LOM_) || defined(_CITADEL_)
     CHOOSE_SEEK     = 1,
     CHOOSE_HIDE     = 2,
     CHOOSE_FIGHT    = 3,

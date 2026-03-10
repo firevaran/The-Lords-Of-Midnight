@@ -163,7 +163,7 @@ namespace tme {
                     obj = (mxentity*)mx->RegimentById(objectno);
                 } else if ( type == AT_STRONGHOLD ) {
                     obj = (mxentity*)mx->StrongholdById(objectno);
-#if defined(_LOM_)
+#if defined(_LOM_) || defined(_CITADEL_)
                 } else if ( type == AT_CHARACTER ) {
                     // character
                     obj = (mxentity*)mx->CharacterById(objectno);

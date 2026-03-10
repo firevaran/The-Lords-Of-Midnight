@@ -3,11 +3,9 @@
 
 #include "../../tme.h"
 
+#if defined(_CITADEL_)
 
 namespace tme {
-
-    namespace scenarios {
-    
     class citadel  : public mxscenario_i
     {
     public:
@@ -23,9 +21,8 @@ namespace tme {
         static MXRESULT MXAPI Create ( tme::mxinterface* mx );
 
     };
-
-    }
-    
 }
+
+#endif
 
 #endif //_CITADELSCENARIO_H_INCLUDED_

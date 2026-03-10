@@ -17,7 +17,7 @@
 
 #include "lom_processor_battle.h"
 
-#if defined(_LOM_)
+#if defined(_LOM_) || defined(_CITADEL_)
 
 #include <algorithm>
 #include <string>

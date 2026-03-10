@@ -41,7 +41,7 @@ bool panel_credits::init()
         return false;
     }
     
-#if defined(_LOM_)
+#if defined(_LOM_) || defined(_CITADEL_)
     auto backgroundColour = Color3B(152,162,209);
 #endif
 

@@ -178,7 +178,29 @@ https://axmol.dev)";
 
     constexpr LPCSTR CREDITS_WEBSITE_ADDRESS            = "www.thelordsofmidnight.com\n\n\n\n\n\n\n\n\n\n";
     constexpr LPCSTR _WELCOME_PROMPT_                   = "If this is the first time playing The Lords of Midnight, then you should consider reading the NOVELLA and then the PLAYING GUIDE\n\nWould you like to read the novella now?";
-#else
+#endif
+
+#if defined(_CITADEL_)
+    constexpr LPCSTR SPLASH_SCREEN_EXPLORE              = "Now explore the epic world of";
+    constexpr LPCSTR SPLASH_SCREEN_TITLE                = "THE CITADEL";
+    constexpr LPCSTR SPLASH_SCREEN_BY                   = "         by";
+    constexpr LPCSTR SPLASH_SCREEN_MIKE                 = "Mike Singleton";
+        
+    constexpr LPCSTR EXIT_MSG                           = "Do you want to exit\nThe Citadel?";
+    constexpr LPCSTR _UPDATE_PROMPT_                    = "You are about to open a browser window to download a new version\n\nAre you sure that you wish to continue?";
+    constexpr LPCSTR _NOVELLA_PROMPT_                   = "You are about to open a browser window to read the Citadel Novella\n\nAre you sure that you wish to continue?";
+    constexpr LPCSTR _GUIDE_PROMPT_                     = "You are about to open a browser window to read the Citadel Playing Guide\n\nAre you sure that you wish to continue?";
+    constexpr LPCSTR _GUIDE_DOCUMENT_                   = "http://www.thelordsofmidnight.com/docs/Citadel_guide.pdf";
+    constexpr LPCSTR _NOVELLA_DOCUMENT_PDF_             = "http://www.thelordsofmidnight.com/docs/Citadel.pdf";
+    #if defined(_OS_IOS_) || defined(_OS_OSX_)
+    constexpr LPCSTR _NOVELLA_DOCUMENT_                 = "http://www.thelordsofmidnight.com/docs/Citadel.epub";
+    #else
+    constexpr LPCSTR _NOVELLA_DOCUMENT_                 = _NOVELLA_DOCUMENT_PDF_;
+    #endif
+
+    constexpr LPCSTR CREDITS_WEBSITE_ADDRESS            = "www.thelordsofmidnight.com\n\n\n\n\n\n\n\n\n\n";
+    constexpr LPCSTR _WELCOME_PROMPT_                   = "If this is the first time playing The Citadel, then you should consider reading the NOVELLA and then the PLAYING GUIDE\n\nWould you like to read the novella now?";
+#endif
 
 #if defined(_DDR_)
     constexpr LPCSTR EXIT_MSG                           = "Do you want to exit\nDoomdark's Revenge?";
@@ -194,9 +216,6 @@ https://axmol.dev)";
     #endif
     constexpr LPCSTR CREDITS_WEBSITE_ADDRESS            = "www.doomdarksrevenge.com\n\n\n\n\n\n\n\n\n\n";
     constexpr LPCSTR _WELCOME_PROMPT_                   = "If this is the first time playing Doomdark's Revenge, then you should consider reading the NOVELLA and then the PLAYING GUIDE\n\nWould you like to read the novella now?";
-#else
-    constexpr LPCSTR EXIT_MSG                           = "Do you want to exit?";
-#endif
 #endif
 
     constexpr LPCSTR CLOSE_STORY_MSG                    = "Are you sure that you wish to close this story?";

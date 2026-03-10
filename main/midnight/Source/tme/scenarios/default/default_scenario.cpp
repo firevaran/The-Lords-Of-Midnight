@@ -915,7 +915,7 @@ namespace tme {
                 return MX_OK ;
             }
             
-#if defined(_LOM_)
+#if defined(_LOM_) || defined(_CITADEL_)
             sv_days++;
 #endif
             mx->scenario->DeadCharactersDropObjects();
@@ -1850,36 +1850,40 @@ namespace tme {
 
         
         // let's add some Terrain Info
-//#define ADD_TERRAIN(x) \
-//        mx->objTerrainInfos.Add( new mxterrain( x, #x ) )
+        
+        mx->objTerrainInfos.Resize(56);
+        mx->objTerrainInfos.m_used = 56;
+        
+#define ADD_TERRAIN(x) \
+        mx->objTerrainInfos[x] = new mxterrain( x, #x )
     
 // NOTE: These can not be added to the container
 // because the container is owned by itself
 // this was temp hack for Citadel testing
-//        ADD_TERRAIN(TN_LAND);
-//        ADD_TERRAIN(TN_ISLE);
-//        ADD_TERRAIN(TN_LAKELAND);
-//        ADD_TERRAIN(TN_PLAIN);
-//        ADD_TERRAIN(TN_PLAINS3);
-//        ADD_TERRAIN(TN_FOREST3);
-//        ADD_TERRAIN(TN_UNUSED_39);
-//        ADD_TERRAIN(TN_TREES);
-//        ADD_TERRAIN(TN_MOUNTAIN3);
-//        ADD_TERRAIN(TN_ICY_MOUNTAIN);
-//        ADD_TERRAIN(TN_DOWNS3);
-//        ADD_TERRAIN(TN_HILLS3);
-//        ADD_TERRAIN(TN_FOOTHILLS);
-//        ADD_TERRAIN(TN_VALLEY);
-//        ADD_TERRAIN(TN_BAY);
-//        ADD_TERRAIN(TN_SEA);
-//        ADD_TERRAIN(TN_RIVER);
-//        ADD_TERRAIN(TN_MARSH);
-//        ADD_TERRAIN(TN_LAKE3);
-//        ADD_TERRAIN(TN_UNUSED_52);
-//        ADD_TERRAIN(TN_UNUSED_53);
-//        ADD_TERRAIN(TN_UNUSED_54);
-//        ADD_TERRAIN(TN_MIST);
-//        ADD_TERRAIN(TN_UNUSED_56);
+        ADD_TERRAIN(TN_LAND);
+        ADD_TERRAIN(TN_ISLE);
+        ADD_TERRAIN(TN_LAKELAND);
+        ADD_TERRAIN(TN_PLAIN);
+        ADD_TERRAIN(TN_PLAINS3);
+        ADD_TERRAIN(TN_FOREST3);
+        ADD_TERRAIN(TN_UNUSED_39);
+        ADD_TERRAIN(TN_TREES);
+        ADD_TERRAIN(TN_MOUNTAIN3);
+        ADD_TERRAIN(TN_ICY_MOUNTAIN);
+        ADD_TERRAIN(TN_DOWNS3);
+        ADD_TERRAIN(TN_HILLS3);
+        ADD_TERRAIN(TN_FOOTHILLS);
+        ADD_TERRAIN(TN_VALLEY);
+        ADD_TERRAIN(TN_BAY);
+        ADD_TERRAIN(TN_SEA);
+        ADD_TERRAIN(TN_RIVER);
+        ADD_TERRAIN(TN_MARSH);
+        ADD_TERRAIN(TN_LAKE3);
+        ADD_TERRAIN(TN_UNUSED_52);
+        ADD_TERRAIN(TN_UNUSED_53);
+        ADD_TERRAIN(TN_UNUSED_54);
+        ADD_TERRAIN(TN_MIST);
+        ADD_TERRAIN(TN_UNUSED_56);
         
         
     }

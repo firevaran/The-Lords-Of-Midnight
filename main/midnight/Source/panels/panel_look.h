@@ -140,7 +140,6 @@ protected:
     void updateMovementIndicators(LANDSCAPE_MOVEMENT movement);
     
     // dragging
-    void parallaxCharacters ( void );
     void OnSelectDrag(uidragevent* event) override;
     void OnDrag(uidragevent* event) override;
     void OnStopDrag(uidragevent* event) override;
@@ -157,6 +156,11 @@ protected:
     void startCompassTimer(Vec2 pos);
     void cancelCompassTimer();
     void showCompass(Vec2 pos);
+
+#if defined(_USE_FOREGROUND_PEOPLE_)
+    void UpdatePeople();
+    void parallaxCharacters ( void );
+#endif
 
 protected:
     mxid                characterId;
@@ -184,13 +188,14 @@ protected:
     // Actions and Commands
     uicommandwindow*    i_command_window;
   
+#if defined(_USE_FOREGROUND_PEOPLE_)
     LandscapePeople*    people[5];
-
     LandscapePeople*    prev_people1;
     LandscapePeople*    prev_people;
     LandscapePeople*    current_people;
     LandscapePeople*    next_people;
     LandscapePeople*    next_people1;
+#endif
  
     Sprite*             movementIndicators[3];
     

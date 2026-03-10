@@ -11,7 +11,7 @@
 enum helpid_t {
     HELP_NONE=0,
     
-#if defined(_LOM_)
+#if defined(_LOM_) || defined(_CITADEL_)
     // lom
     HELP_TN_PLAINS,
     HELP_TN_CITADEL,
@@ -69,7 +69,7 @@ enum helpid_t {
     HELP_NASTIES,
     HELP_ARMIES,
     
-#if defined(_LOM_)
+#if defined(_LOM_) || defined(_CITADEL_)
     HELP_FEY,
     HELP_WISE,
     HELP_FREE,
@@ -81,7 +81,7 @@ enum helpid_t {
     HELP_PRESS_NIGHT,
     HELP_CHOICE_OF_GAMES,
     HELP_VICTORY,
-#if defined(_LOM_)
+#if defined(_LOM_) || defined(_CITADEL_)
     HELP_ICEFEAR,
 #endif
     HELP_BATTLE,

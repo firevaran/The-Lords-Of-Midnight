@@ -12,7 +12,7 @@
 #include "../system/moonring.h"
 #include "../ui/uihelper.h"
 
-#if defined(_LOM_)
+#if defined(_LOM_) || defined(_CITADEL_)
 #if defined(_OS_DESKTOP_)
     constexpr LPCSTR SCREEN_ADVERT      = "screens/misc/lom_advert_for_desktops.png";
 #else

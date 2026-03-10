@@ -166,7 +166,7 @@ void panel_think::enableButtons()
     showButton(ID_GROUP_DISBAND, page->disband );
     showButton(ID_GROUP_LEAVE, page->leave );
         
-#if defined(_LOM_)
+#if defined(_LOM_) || defined(_CITADEL_)
     showButton(ID_UNHIDE,       page->unhide);
     showButton(ID_FIGHT,        page->fight);
 #endif
@@ -228,7 +228,7 @@ void panel_think::setObject(mxid targetObjectId)
     // check for strongholds
     // for check place
     TME_GetCharacterLocationInfo ( c );
-#if defined(_LOM_)
+#if defined(_LOM_) || defined(_CITADEL_)
     if ( (location_strongholds.Count() == 0) && (location_infront_strongholds.Count() == 0) )
         enableButton(ID_THINK_PLACE, false );
 #endif
@@ -372,7 +372,7 @@ void panel_think::setupPages()
         
             addPage(id);
 
-#if defined(_LOM_)
+#if defined(_LOM_) || defined(_CITADEL_)
             if ( currentmode==MODE_THINK_APPROACH ) {
                 TME_GetCharacter(c1, id);
                 if ( !Character_IsRecruited(c1) ) {
@@ -493,7 +493,7 @@ void panel_think::OnNotification( Ref* sender )
             break;
         }
             
-#if defined(_LOM_)
+#if defined(_LOM_) || defined(_CITADEL_)
         case ID_UNHIDE:
         {
             mr->unhide();

@@ -77,7 +77,7 @@ public:
     
     T First();
 
-protected:
+public:
     u32         m_max;
     u32         m_used;
     EntityArray m_elements;

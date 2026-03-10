@@ -19,9 +19,8 @@
 #include "scenario_citadel_internal.h"
 #include <string>
 
+#if defined(_CITADEL_)
 namespace tme {
-
-    namespace scenarios {
 
     static scenarioinfo_t    citadel_scenario_info = {
         mxscenarioid::CITADEL,
@@ -31,7 +30,7 @@ namespace tme {
         "rorthron@thelordsofmidnight.com",
         "http://www.thelordsofmidnight.com",
         "The Lords of Midnight 3 : The Citadel for the Midnight Engine",
-        "Copyright 1994 - 2017 Mike Singleton & Chris Wild"
+        "Copyright 1994 - 2026 Mike Singleton & Chris Wild"
     };
 
 static citadel_x* citadel_scenario = NULL ;
@@ -102,11 +101,12 @@ MXRESULT citadel_x::Register ( mxengine* midnightx )
     mx->text = new mxtext;
     mx->night = new mxnight;
     mx->battle = new mxbattle;
+    mx->gameover = new mxgameover;
     mx->entityfactory = new mxentityfactory;
     mx->scenario = (mxscenario*)citadel_scenario;
     
     // set initial feature flags
-    //mx->scenario->features = SF_MOONRING|SF_ICEFEAR  ;
+    mx->scenario->features = SF_MOONRING|SF_ICEFEAR  ;
     
     return MX_OK ;
 }
@@ -116,6 +116,7 @@ MXRESULT citadel_x::UnRegister ( mxengine* midnightx )
     SAFEDELETE ( mx->text ) ;
     SAFEDELETE ( mx->night ) ;
     SAFEDELETE ( mx->battle ) ;
+    SAFEDELETE ( mx->gameover ) ;
     SAFEDELETE ( mx->entityfactory );
     
     // mx will delete the scenario, so just lose our
@@ -124,7 +125,7 @@ MXRESULT citadel_x::UnRegister ( mxengine* midnightx )
     return MX_OK ;
 }
 
-} // SCENARIOS
-    
 }
 // TME
+
+#endif

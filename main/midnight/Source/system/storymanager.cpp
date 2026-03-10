@@ -12,6 +12,7 @@
 #include "configmanager.h"
 #include "../tme/tme_interface.h"
 #include "moonring.h"
+#include "../tme/TMEMapBuilder.h"
 
 #include <string>
 
@@ -123,6 +124,20 @@ bool storymanager::create ( storyid_t id, u64 flags, mxdifficulty_t difficulty )
     last_save=SAVE_NONE;
     last_night.Clear();
     last_morning.Clear();
+    
+#if defined(_CITADEL_)
+#if defined(_LOM_MAP_)
+    auto builder = new TMEMapBuilder();
+    auto map = builder->Build( "lom_map_water.tmx" );
+    TME_DebugInstallMap(map);
+#endif
+    
+#if defined(_CITADEL_MAP_)
+    auto builder = new TMEMapBuilderCitadel();
+    auto map = builder->Build( "citadel_wip.tmx" );
+    TME_DebugInstallMap(map);
+#endif
+#endif
     
     ax::FileUtils::getInstance()->createDirectories(getFolder(id));
     

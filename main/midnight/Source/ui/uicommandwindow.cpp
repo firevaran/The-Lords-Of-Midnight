@@ -94,7 +94,7 @@ bool uicommandwindow::initWithParent( uipanel* parent )
     addShortcutKey(ID_NIGHT,        K_NIGHT);
     addShortcutKey(ID_HOME,         K_ESC);
     addShortcutKey(ID_MAP,          K_MAP);
-#if defined(_LOM_)
+#if defined(_LOM_) || defined(_CITADEL_)
     addShortcutKey(ID_SEEK,         K_SEEK);
     addShortcutKey(ID_HIDE,         K_HIDE);
     addShortcutKey(ID_UNHIDE,       K_UNHIDE);
@@ -139,7 +139,7 @@ void uicommandwindow::initialiseCommands()
     auto think = uihelper::CreateImageButton("i_think", ID_THINK, callback);
     addItem(think, CHOOSE_THINK);
   
-#if defined(_LOM_)
+#if defined(_LOM_) || defined(_CITADEL_)
     // SEEK
     auto seek = uihelper::CreateImageButton("i_seek", ID_SEEK, callback);
     addItem(seek,CHOOSE_SEEK);
@@ -259,7 +259,7 @@ void uicommandwindow::updateElements()
     #define ENABLE_IF_LOC_FLAG(x,y) \
         enableItem(x,location_flags.Is(y))
     
-#if defined(_LOM_)
+#if defined(_LOM_) || defined(_CITADEL_)
     // SEEK
     ENABLE_IF_LOC_FLAG(ID_SEEK, lif_seek);
     

@@ -17,7 +17,7 @@ settingsmanager::settingsmanager() :
     , autoapproach(TOGGLE::OFF)
     , autofight(TOGGLE::OFF)
     , autounhide(TOGGLE::OFF)
-#if defined(_LOM_)
+#if defined(_LOM_) || defined(_CITADEL_)
     , autoseek(TOGGLE::OFF)
 #else
     , autoseek(TOGGLE::ON)

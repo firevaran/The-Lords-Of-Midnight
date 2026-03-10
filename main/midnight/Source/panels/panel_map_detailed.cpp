@@ -284,7 +284,7 @@ void panel_map_detailed::OnNotification( Ref* sender )
 bool IsSingularTerrain(mxterrain_t terrain)
 {
     switch (terrain) {
-#if defined(_LOM_)
+#if defined(_LOM_) || defined(_CITADEL_)
         case TN_CAVERN:
         case TN_CITADEL:
         case TN_HENGE:

@@ -22,7 +22,7 @@ USING_NS_AX;
 USING_NS_AX_UI;
 USING_NS_TME;
 
-#if defined(_LOM_)
+#if defined(_LOM_) || defined(_CITADEL_)
     #define BACKGROUND_COLOUR   _clrWhite
 #endif
 #if defined(_DDR_)

@@ -1,6 +1,8 @@
 #ifndef _LOM_NOVEL_SCENARIO_INTERNAL_H_INCLUDED_
 #define _LOM_NOVEL_SCENARIO_INTERNAL_H_INCLUDED_
 
+#if defined(_LOM_)
+
 #include "../../baseinc/tme_internal.h"
 #include "../default/default_scenario_internal.h"
 #include "../lom/scenario_lom_internal.h"
@@ -23,6 +25,7 @@ namespace tme {
     
     #define LOM_NOVEL_SCENARIO(x) static_cast<lom_novel_x*>(mx->scenario)->x
 }
+#endif
 
 #endif //_LOM_NOVEL_SCENARIO_INTERNAL_H_INCLUDED_
 
