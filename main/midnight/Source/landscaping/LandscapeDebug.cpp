@@ -61,7 +61,7 @@ void LandscapeDebug::Build()
                 
                 // debug
                 auto dot = Sprite::createWithSpriteFrameName( "dot" );
-                dot->setColor(Color3B::RED);
+                dot->setColor(Color3B::WHITE);
                 dot->setPosition(x, height - y);
                 dot->setScale(0.1f);
                 dot->setAnchorPoint(Vec2(0.5,0.5));
@@ -71,10 +71,10 @@ void LandscapeDebug::Build()
                 
                 switch (options->debugMode) {
                     case 1:
-                        snprintf(buffer, NUMELE(buffer), "%f,%f", item->loc.x-(options->here.x/LANDSCAPE_DIR_STEPS), item->loc.y-(options->here.y/LANDSCAPE_DIR_STEPS));
+                        snprintf(buffer, NUMELE(buffer), "%.2f,%.2f", item->loc.x-(options->here.x/LANDSCAPE_DIR_STEPS), item->loc.y-(options->here.y/LANDSCAPE_DIR_STEPS));
                         break;
                     case 2:
-                        snprintf(buffer, NUMELE(buffer), "%f", item->scale);
+                        snprintf(buffer, NUMELE(buffer), "%.4f", item->scale);
                         break;
                     case 3:
                         snprintf(buffer, NUMELE(buffer), "%d,%d", (int)item->position.x, (int)item->position.y);
@@ -85,12 +85,16 @@ void LandscapeDebug::Build()
                     case 5:
                         snprintf(buffer, NUMELE(buffer), "%d", item->terrain);
                         break;
+                    case 6:
+                        snprintf(buffer, NUMELE(buffer), "%d", item->id);
+                        break;
+
                     default:
                         break;
                 }
                 
                 
-                auto label = Label::createWithTTF( buffer, "fonts/arial.ttf", 10);
+                auto label = Label::createWithTTF( buffer, "fonts/arial.ttf", 20);
                 
                 label->setColor(Color3B::BLUE);
                 label->setAlignment(TextHAlignment::CENTER);

@@ -28,7 +28,8 @@
 constexpr f32 TRANSITION_DURATION = 0.25f;
 
 typedef enum floor_t {
-      floor_normal = 0
+      floor_none = 0
+    , floor_normal
     , floor_snow
     , floor_river
     , floor_sea
@@ -45,11 +46,21 @@ public:
     tme::loc_t  loc;
     mxterrain_t terrain;
     floor_t     floor;
+    s32         distance;
     bool        army;
     bool        mist;
     bool        graffiti;
     Vec3        position;
     f32         scale;
+    
+    bool        people;
+    bool        riders;
+    bool        warriors;
+    mxid        objectid;
+    c_mxid      lords;
+    
+    s32         id;
+    LandscapeItem* linked[8];
 };
 
 using LandscapeItems = ax::Vector<LandscapeItem*>;
@@ -88,17 +99,18 @@ public:
     float RadiansFromFixedPointAngle(s32 fixed);
     f32 NormaliseXPosition(f32 x);
     
+    LandscapeItem* GetPeople(mxid locId, maplocation& map, LandscapeItem* item);
+
+    
 public:
     moonring*           mr;
     LandscapeItems*     items;
     LandscapeOptions*   options;
     s32                 location_infront_y;
-    tme::loc_t	        loc;
+    tme::loc_t          loc;
     f32                 looking;
     f32                 horizontalOffset;
     f32                 landscapeScreenWidth;
-
-    
 };
 
 

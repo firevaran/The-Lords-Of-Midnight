@@ -12,6 +12,7 @@
 #include "LandscapeNode.h"
 #include "LandscapeGenerator.h"
 
+FORWARD_REFERENCE(SimpleShader);
 
 class LandscapeLand : public LandscapeNode
 {
@@ -20,10 +21,13 @@ public:
     static LandscapeLand* create( LandscapeOptions* options );
 
     void Build() override;
+    void RefreshPositions() override;
     
 protected:
     bool initWithOptions( LandscapeOptions* options );
     Sprite* GetFloorImage( floor_t floor );
+    
+    SimpleShader* floorShader;
 };
 
 #endif /* LandscapeLand_hpp */

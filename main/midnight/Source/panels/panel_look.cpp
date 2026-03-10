@@ -1,5 +1,7 @@
 #include "../axmol_sdk.h"
 
+//#define _USE_FOREGROUND_PEOPLE_
+
 #include "panel_look.h"
 #include "panel_think.h"
 
@@ -86,17 +88,22 @@ panel_look::panel_look() :
     imgShield(nullptr),
     layHeader(nullptr),
     landscape_dragging(false),
+#if defined(_USE_FOREGROUND_PEOPLE_)
     current_people(nullptr),
     next_people(nullptr),
     next_people1(nullptr),
     prev_people(nullptr),
     prev_people1(nullptr),
+#endif
     options(nullptr),
     compass(nullptr),
     touchListener(nullptr),
     currentMovementIndicator(LM_NONE)
 {
+#if defined(_USE_FOREGROUND_PEOPLE_)
     CLEARARRAY(people);
+#endif
+
     CLEARARRAY(movementIndicators);
     
 }
@@ -131,12 +138,12 @@ bool panel_look::init()
     options->mr = GetMoonring();
     options->generator = new LandscapeGenerator();
     options->colour = new LandscapeColour(options);
-    options->showWater = false;
+    options->showWater = true;
     options->showLand  = false;
-    options->showTerrain = true ;
-    options->debugMode = 0;
-    options->landScaleX = 1.6f;
-    options->landScaleY = 2.15f;
+    options->showTerrain = false ;
+    options->debugMode = 6;
+    options->landScaleX = 1.5f;
+    options->landScaleY = 1.5f; //2.8f;
     options->debugLand=false;
     options->isMoving=false;
     options->isLooking=false;
@@ -204,6 +211,7 @@ bool panel_look::init()
     uihelper::AddTopRight(safeArea, following, SHIELD_X+RES(32),SHIELD_Y+RES(128+48));
 #endif
     
+#if defined(_USE_FOREGROUND_PEOPLE_)
     // people in front
     for (auto &person : people) {
         person = LandscapePeople::create(options);
@@ -212,6 +220,7 @@ bool panel_look::init()
         person->setCallback(clickCallback);
         addChild(person);
     }
+#endif
 
     //
     current_info = new locationinfo_t();
@@ -371,12 +380,17 @@ void panel_look::OnMovementComplete( /*uiview* sender,*/ LANDSCAPE_MOVEMENT type
             return;
     }
     
+    
 #if defined(_DDR_)
     // map plains for ddr plains
     if ( loc.terrain == TN_PLAINS )
         loc.terrain = TN_PLAINS2;
     loc.terrain = (mxterrain_t)((int)loc.terrain - TN_PLAINS2) ;
 #endif
+    
+    if (loc.terrain > TN_PLAINS2)
+        return;
+
     
     if ( !showHelpWindow( (helpid_t)(HELP_NONE+1+(int)loc.terrain )) )
         return;
@@ -481,7 +495,7 @@ void panel_look::setViewForCurrentCharacter()
     
     options->colour->SetLookColour(current_info->time);
     options->timeofday = current_info->time;
-    
+    options->characterId = current_info->id;
     options->here = current_info->location;
     options->here.x *= LANDSCAPE_DIR_STEPS;
     options->here.y *= LANDSCAPE_DIR_STEPS;
@@ -507,6 +521,23 @@ void panel_look::setViewForCurrentCharacter()
     
     UIDEBUG("setViewForCurrentCharacter: Build Landscape");
     options->generator->Build(options);
+
+#if defined(_USE_FOREGROUND_PEOPLE_)
+    UpdatePeople();
+#endif
+
+    UpdateLandscape();
+    
+    // Add shield if following
+    
+    // update actions
+    
+}
+
+#if defined(_USE_FOREGROUND_PEOPLE_)
+void panel_look::UpdatePeople()
+{
+    character&    c = TME_CurrentCharacter();
     
     // Initialise people
     prev_people1=people[0];
@@ -531,14 +562,8 @@ void panel_look::setViewForCurrentCharacter()
 
     next_people1->Initialise( c, NEXT_DIRECTION(NEXT_DIRECTION(current_info->looking)));
     next_people1->setPositionX(width+width);
-
-    UpdateLandscape();
-    
-    // Add shield if following
-    
-    // update actions
-    
 }
+#endif
 
 void panel_look::UpdateLandscape()
 {
@@ -689,9 +714,11 @@ bool panel_look::startLookLeft()
         
         f32 distance = value / target;
   
+#if defined(_USE_FOREGROUND_PEOPLE_)
         current_people->adjustMovement( distance );
         prev_people->adjustMovement( distance );
         prev_people1->adjustMovement( distance );
+#endif
 
         if ( value <= target) {
             stopRotating(LM_ROTATE_LEFT);
@@ -702,9 +729,11 @@ bool panel_look::startLookLeft()
     
     this->runAction(EaseSineInOut::create(actionfloat));
     
+#if defined(_USE_FOREGROUND_PEOPLE_)
     prev_people1->startSlideFromLeft(2);
     prev_people->startSlideFromLeft(1);
     current_people->startSlideOffRight(0);
+#endif
     
     return TRUE;
 }
@@ -733,10 +762,12 @@ bool panel_look::startLookRight()
         
         //UIDEBUG("MovementRight  %f %f %f", target, options->lookAmount, value);
         
+#if defined(_USE_FOREGROUND_PEOPLE_)
         f32 distance = value / target;
         current_people->adjustMovement( distance );
         next_people->adjustMovement( distance );
         next_people1->adjustMovement( distance );
+#endif
 
         if ( value >= target) {
             stopRotating(LM_ROTATE_RIGHT);
@@ -748,9 +779,11 @@ bool panel_look::startLookRight()
     
     this->runAction(EaseSineInOut::create(actionfloat));
     
+#if defined(_USE_FOREGROUND_PEOPLE_)
     next_people1->startSlideFromRight(2);
     next_people->startSlideFromRight(1);
     current_people->startSlideOffLeft(0);
+#endif
     
     return TRUE;
     
@@ -842,8 +875,6 @@ bool panel_look::moveForward()
     return false;
 }
 
-
-
 bool panel_look::startMoving()
 {
     Disable();
@@ -892,12 +923,12 @@ bool panel_look::startMoving()
         });
         
         this->runAction(EaseSineInOut::create(actionfloat));
-        
+
+#if defined(_USE_FOREGROUND_PEOPLE_)
         next_people->Initialise(c, c.looking);
         next_people->startFadeIn();
-        
         current_people->startFadeOut();
-        
+#endif
         return true;
     }
     
@@ -914,6 +945,7 @@ void panel_look::stopRotating(LANDSCAPE_MOVEMENT type)
 {
     options->isLooking = false;
     
+#if defined(_USE_FOREGROUND_PEOPLE_)
     if(type == LM_ROTATE_LEFT)
     {
         LandscapePeople* temp = next_people1;
@@ -929,6 +961,7 @@ void panel_look::stopRotating(LANDSCAPE_MOVEMENT type)
         prev_people=current_people;
         current_people=temp;
     }
+#endif
 
     stopMovement(type);
 }
@@ -937,10 +970,12 @@ void panel_look::stopMoving()
 {
     options->isMoving = false;
     
+#if defined(_USE_FOREGROUND_PEOPLE_)
     // swap info
     LandscapePeople* temp = next_people;
     next_people=current_people;
     current_people=temp;
+#endif
     
     stopMovement(LM_MOVE_FORWARD);
     
@@ -948,11 +983,13 @@ void panel_look::stopMoving()
 
 void panel_look::stopMovement(LANDSCAPE_MOVEMENT type)
 {
+#if defined(_USE_FOREGROUND_PEOPLE_)
     next_people1->clear();
     next_people->clear();
     current_people->stopAnim();
     prev_people->clear();
     prev_people1->clear();
+#endif
     
     setViewForCurrentCharacter();
     
@@ -1696,7 +1733,10 @@ void panel_look::OnDrag(uidragevent* event)
     options->lookAmount = startDragLookAmount + ((LANDSCAPE_DIR_AMOUNT*2) * dx);
     
     UpdatePanningLandscape();
+    
+#if defined(_USE_FOREGROUND_PEOPLE_)
     parallaxCharacters();
+#endif
 }
 
 void panel_look::UpdatePanningLandscape()
@@ -1706,6 +1746,7 @@ void panel_look::UpdatePanningLandscape()
     current_view->RefreshPositions();
 }
 
+#if defined(_USE_FOREGROUND_PEOPLE_)
 //
 // we need to offset the overlay views
 // by the required amount in the correct direction
@@ -1725,8 +1766,8 @@ void panel_look::parallaxCharacters ()
     current_people->setPositionX( 0 + movement );
     next_people->setPositionX( 0 + width + movement );
     next_people1->setPositionX( 0 + width + width + movement );
-    
 }
+#endif
 
 //
 // we need to snap the view to the nearest look direction
@@ -1778,7 +1819,9 @@ void panel_look::lookPanoramaSnap(uidragevent* event)
         options->isLooking = true;
         options->lookAmount =  value;
         UpdatePanningLandscape();
+#if defined(_USE_FOREGROUND_PEOPLE_)
         parallaxCharacters();
+#endif
     });
     
     runAction(Sequence::createWithTwoActions( actionfloat, CallFunc::create( [=, this] { stopDragging(locationAdjustment); } )));

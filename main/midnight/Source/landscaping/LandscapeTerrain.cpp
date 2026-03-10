@@ -14,12 +14,14 @@
 #include "LandscapeTerrain.h"
 #include "LandscapeDebug.h"
 #include "LandscapeColour.h"
+#include "LandscapePeopleV2.h"
 
 #include "../tme/tme_interface.h"
 #include "../system/tmemanager.h"
 #include "../system/moonring.h"
 #include "../system/shadermanager.h"
 
+#include "../ui/uihelper.h"
 
 LandscapeTerrain* LandscapeTerrain::create( LandscapeOptions* options )
 {
@@ -98,7 +100,7 @@ void LandscapeTerrain::Build()
                 std::string mist = "t_mist";
                 AddDoubleGraphic(mist,x,y,tint1,tint2,alpha,scale,item);
             }
-            else if ( item->army ) {
+            else if ( item->army && item->distance>2 ) {
 #if defined(_DDR_)
                 std::string army = "t_army2";
                 AddDoubleGraphic(army,x,y,tint1,tint2,alpha,scale,item);
@@ -106,6 +108,27 @@ void LandscapeTerrain::Build()
                 std::string army = "t_army0";
                 AddGraphic(GetImage(army),x,y,tint1,tint2,alpha,scale,item);
 #endif
+            } else {
+                if ( item->people ) {
+                    auto people = LandscapePeopleV2::create(options);
+                    people->setContentSize( Size( RES(1024), RES(256)) );
+                    people->Initialise(item);
+                 
+                    people->setScale( scale_3qtr * scale);
+                    people->setPosition(options->generator->NormaliseXPosition(x), getContentSize().height - y - (RES(96)*scale));
+                    people->setAnchorPoint(Vec2(0.5,0)); // bottom center
+                    //uihelper::addDebugNode(people);
+
+                    //mr->shader->UpdateTerrainTimeShader(graphic,alpha,tint1,tint2);
+                    
+                    auto imageItem = new ImageItem(item,0);
+                    imageItem->autorelease();
+                    
+                    people->setUserObject(imageItem);
+                    addChild(people);
+ 
+
+                }
             }
         }
         
@@ -151,6 +174,11 @@ Sprite* LandscapeTerrain::AddGraphic(
 
 Sprite* LandscapeTerrain::GetTerrainImage( mxterrain_t terrain )
 {
+    if ( terrain == TN_LAKE3 || terrain == TN_RIVER) {
+        //image->setScale(0.25);
+        return nullptr;
+    }
+
     // TODO: Cache this!
     terrain_data_t*    d = static_cast<terrain_data_t*>(TME_GetEntityUserData(MAKE_ID(INFO_TERRAININFO, terrain)));
     if ( d == nullptr || d->file.empty() ) {
@@ -164,7 +192,9 @@ Sprite* LandscapeTerrain::GetTerrainImage( mxterrain_t terrain )
     if ( terrain == TN_LAKE ) {
       //  image->setAnchorPoint(Vec2(0.5,1.0));
     }
-    
+
+    //image->setScale(0.25);
+
     return image;
 }
 

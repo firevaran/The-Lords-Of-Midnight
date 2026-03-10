@@ -54,6 +54,7 @@ public:
     bool                    isNarrowTunnel;
     mxtime_t                timeofday;
     f32                     resScale;
+    mxid                    characterId;
     
 };
 

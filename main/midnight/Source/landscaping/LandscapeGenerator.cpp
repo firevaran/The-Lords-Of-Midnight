@@ -6,6 +6,8 @@
 USING_NS_AX;
 USING_NS_TME;
 
+mxterrain_t toGeneralisedTerrain(mxterrain_t t);
+
 LandscapeGenerator::LandscapeGenerator() :
     options(nullptr),
     items(new Vector<LandscapeItem*>()),
@@ -68,15 +70,43 @@ void LandscapeGenerator::BuildPanorama()
     
     qDim = 8;
     
+    s32 id = 1;
+    
+    LandscapeItem* cells[512];
+    CLEARARRAY(cells);
+    
+    
     for ( int y1=y-qDim; y1<=y+qDim; y1++ ) {
         for ( int x1=x-qDim; x1<=x+qDim; x1++ ) {
 
             auto cell = ProcessLocation(x1, y1);
             if ( cell!= nullptr ) {
                 items->pushBack(cell);
+                cell->id = id;
+                cells[id-1] = cell;
             }
+            id++;
         }
     }
+ 
+    #define COPY(x,y) if( x>=0 && x<300) cell->linked[y] = cells[x]
+    
+    for(int ii=0; ii<300; ii++) {
+        auto cell = cells[ii];
+        CONTINUE_IF_NULL(cell);
+        
+        COPY(ii-18,0);
+        COPY(ii-17,1);
+        COPY(ii-16,2);
+        
+        COPY(ii-1,3);
+        COPY(ii+1,4);
+        
+        COPY(ii+16,5);
+        COPY(ii+17,6);
+        COPY(ii+18,7);
+    }
+ 
  
     sort( items->begin( ), items->end( ), [ ]( const LandscapeItem* lhs, const LandscapeItem* rhs )
     {
@@ -85,65 +115,43 @@ void LandscapeGenerator::BuildPanorama()
     
 }
 
-
-//void LandscapeGenerator::ProcessQuadrant(s32 x, s32 y, s32 dx, s32 dy, s32 qDim)
-//{
-//    s32	qx1, qy1, qx2, qy2;
-//    
-//    qDim = qDim>>1;
-//    
-//    if (qDim)
-//    {
-//        qx1 = x + dx*qDim;
-//        qx2 = x + (1 - dx)*qDim;
-//        qy1 = y + dy*qDim;
-//        qy2 = y + (1 - dy)*qDim;
-//        
-//        ProcessQuadrant( qx1, qy1, dx, dy, qDim);
-//        ProcessQuadrant( qx2, qy1, dx, dy, qDim);
-//        ProcessQuadrant( qx1, qy2, dx, dy, qDim);
-//        ProcessQuadrant( qx2, qy2, dx, dy, qDim);
-//    }
-//    else
-//    {
-//        auto cell = ProcessLocation(x, y);
-//        if ( cell!= nullptr ) {
-//            items->pushBack(cell);
-//        }
-//    }
-//}
-
 LandscapeItem* LandscapeGenerator::ProcessLocation(s32 x, s32 y)
 {
-    maplocation		map;
-	terraininfo		tinfo;
+    maplocation     map;
+    terraininfo     tinfo;
 
     LandscapeItem* item = new LandscapeItem();
     item->autorelease();
     
-	
-	TME_GetLocation( map, MAKE_LOCID(x, y) );
-	TME_GetTerrainInfo ( tinfo, MAKE_ID(INFO_TERRAININFO, map.terrain) );
+    auto locId = MAKE_LOCID(x, y);
+    
+    item->loc = loc_t(x,y);
+    item->floor = floor_none;
+    item->army = false;
+    item->mist = false;
+    item->position = Vec3(0,0,0);
+    CLEARARRAY(item->linked);
+    
+    TME_GetLocation( map, locId );
+    TME_GetTerrainInfo ( tinfo, MAKE_ID(INFO_TERRAININFO, map.terrain) );
 
-	item->loc = loc_t(x,y);
-    item->floor = floor_normal;
-    
-    
+        
     if ( map.terrain == TN_LAKE3 )
         item->floor = floor_lake;
-    
-    if ( map.terrain == TN_RIVER )
+    else if ( map.terrain == TN_RIVER )
         item->floor = floor_river ;
+    else if ( toGeneralisedTerrain(map.terrain) == TN_PLAINS )
+        item->floor = floor_none ;
+    else
+        item->floor = floor_normal ;
     
-    if ( map.terrain == TN_SEA || map.terrain == TN_BAY  )
-        item->floor = floor_sea ;
+    //if ( map.terrain == TN_SEA || map.terrain == TN_BAY  )
+    //    item->floor = floor_sea ;
         
-    if (map.terrain == TN_ICYWASTE || map.terrain == TN_FROZENWASTE)
-        item->floor = floor_snow ;
-	
-    item->army = false;
-	item->mist = false;
-    item->position = Vec3(0,0,0);
+    //if (map.terrain == TN_ICYWASTE || map.terrain == TN_FROZENWASTE)
+    //    item->floor = floor_snow ;
+
+
     item->terrain = map.terrain;
     
 #if defined(_LOM_)
@@ -155,8 +163,8 @@ LandscapeItem* LandscapeGenerator::ProcessLocation(s32 x, s32 y)
     }
 #endif
 
-	if( map.flags&lf_army && tinfo.flags&tif_army )
-		item->army = true;
+    if( map.flags&lf_army && tinfo.flags&tif_army )
+        item->army = true;
 
     if ( !options->isMoving && item->army ) {
         if (x== options->currentLocation.x && y==options->currentLocation.y)
@@ -171,8 +179,17 @@ LandscapeItem* LandscapeGenerator::ProcessLocation(s32 x, s32 y)
             item->army=false;
     
     // if there is mist here then we need to draw the mist
-	if ( map.flags&lf_mist && !tme::variables::sv_display_no_mist)
-		item->mist = true;
+    if ( map.flags&lf_mist && !tme::variables::sv_display_no_mist)
+        item->mist = true;
+    
+    
+    item->distance = options->currentLocation.distance(item->loc);
+    
+// FEATURE LandscapePeopleV2
+//    if(item->distance >0 && item->distance < 3) {
+//        item = GetPeople(locId, map, item);
+//
+//    }
     
     return CalcCylindricalProjection(item);
     
@@ -188,8 +205,8 @@ LandscapeItem* LandscapeGenerator::ProcessLocation(s32 x, s32 y)
 
 LandscapeItem* LandscapeGenerator::CalcCylindricalProjection(LandscapeItem* item)
 {
-	float	x, y, xOff, yOff;
-	double angle, objAngle, viewAngle;
+    float	x, y, xOff, yOff;
+    double angle, objAngle, viewAngle;
     
     x = (float)( (item->loc.x*LANDSCAPE_DIR_STEPS) - loc.x) / (float)LANDSCAPE_DIR_STEPS;
     y = (float)( (item->loc.y*LANDSCAPE_DIR_STEPS) - loc.y) / (float)LANDSCAPE_DIR_STEPS;
@@ -197,14 +214,14 @@ LandscapeItem* LandscapeGenerator::CalcCylindricalProjection(LandscapeItem* item
     f32 looking_amount = looking;
         
     viewAngle = RadiansFromFixedPointAngle( looking_amount );
-	
+
     objAngle = atan2f(x, -y);
-	
+
     angle = objAngle - viewAngle;
-	
+
     if (angle>MX_PI)
         angle -= MX_PI2;
-	
+
     if (angle<-MX_PI)
         angle += MX_PI2;
     
@@ -261,4 +278,115 @@ f32 LandscapeGenerator::NormaliseXPosition(f32 x)
     }
 
     return x;
+}
+
+LandscapeItem* LandscapeGenerator::GetPeople(mxid locId, maplocation& map, LandscapeItem* item)
+{
+    c_mxid objects;
+
+    item->warriors = item->riders = false;
+    item->objectid = OB_NONE ;
+    item->lords.Clear();
+    
+    if( GET_ID(map.object) > OB_NONE && GET_ID(map.object) < OB_SHELTER ) {
+        item->objectid = map.object;
+    }
+    
+    if(map.terrain == TN_CITADEL) {
+        int a = 100;
+    }
+    
+    // get the characters infront of us
+#if defined(_LOM_)
+    u32 recruited;
+    TME_GetCharacters ( locId, objects, recruited );
+#endif
+    
+#if defined(_DDR_)
+    TME_GetCharactersAtLocation(locid, objects, TRUE, options->isInTunnel);
+
+    if ( options->isInTunnel ) {
+        item->objectid = options->isLookingDownTunnel
+            ? map.object_tunnel
+            : OB_NONE;
+    }
+#endif
+
+   for (u32 ii = 0; ii < objects.Count(); ii++) {
+        character c;
+        TME_GetCharacter ( c, objects[ii] );
+        
+        CONTINUE_IF(c.id==options->characterId);
+            
+        
+#if defined(_DDR_)
+        CONTINUE_IF( options->isLookingDownTunnel && !Character_IsInTunnel(c) );
+#endif
+        CONTINUE_IF( Character_IsDead(c) ||  Character_IsHidden(c) );
+
+
+        item->lords.Add(c.id);
+    }
+  
+    
+#if defined(_LOM_)
+    //if (item->army || item->lords.Count()) {
+        TME_GetLocationInfo(item->loc);
+        if ( location_armies.foe_riders )
+        {
+            item->riders = true;
+        } else if ( location_armies.foe_warriors ) {
+            item->warriors = true;
+        }
+    //}
+#endif
+
+    item->people = item->lords.Count() ||
+                    item->riders ||
+                    item->warriors ||
+                    item->objectid != OB_NONE;
+    
+    return item;
+}
+
+
+mxterrain_t toGeneralisedTerrain(mxterrain_t t)
+{
+    switch (t) {
+        case TN_PLAINS2:
+        case TN_PLAINS3:
+        case TN_LAND:
+        case TN_PLAIN:
+            return TN_PLAINS;
+            
+        case TN_FOREST2:
+        case TN_FOREST3:
+        case TN_TREES:
+            return TN_FOREST;
+            
+        case TN_MOUNTAIN2:
+        case TN_MOUNTAIN3:
+        case TN_ICY_MOUNTAIN:
+            return TN_MOUNTAIN;
+            
+        case TN_WATCHTOWER:
+            return TN_TOWER;
+            
+        case TN_ICYWASTE:
+            return TN_FROZENWASTE;
+            
+        case TN_LAKE3:
+            return TN_LAKE;
+            
+        case TN_HILLS3:
+        case TN_DOWNS:
+        case TN_FOOTHILLS:
+            return TN_HILLS;
+            
+        case TN_STONES:
+            return TN_LITH;
+            
+        default:
+            return t;
+    }
 }

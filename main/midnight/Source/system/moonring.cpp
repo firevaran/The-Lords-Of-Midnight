@@ -736,19 +736,7 @@ void moonring::initialise( progressmonitor* monitor )
     tme::variables::sv_cheat_armies_noblock = true;
     tme::variables::sv_cheat_nasties_noblock = true;
 #endif
-    
-#if defined(_LOM_MAP_)
-    auto builder = new TMEMapBuilder();
-    mxmap* map = builder->Build( "lom_map.tmx" );
-    TME_DebugInstallMap(map);
-#endif
-    
-#if defined(_CITADEL_MAP_)
-    auto builder = new TMEMapBuilderCitadel();
-    mxmap* map = builder->Build( "citadel_wip.tmx" );
-    TME_DebugInstallMap(map);
-#endif
-    
+        
 }
 
 #if defined(_OS_DESKTOP_)
