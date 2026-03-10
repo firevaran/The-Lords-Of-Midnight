@@ -5,7 +5,7 @@
 //  Created by Chris Wild on 07/03/2023.
 //  Copyright © 2023 Chilli Hugger Software. All rights reserved.
 //
-#include "../cocos.h"
+#include "../axmol_sdk.h"
 
 #include "LandscapePeopleV2.h"
 #include "LandscapeColour.h"
@@ -20,8 +20,8 @@
 
 #include "../tme/tme_interface.h"
 
-USING_NS_CC;
-using namespace tme;
+USING_NS_AX;
+USING_NS_TME;
 
 #define adjusty                 LRES(8)
 constexpr f32 default_scale = scale_normal;
@@ -38,7 +38,7 @@ LandscapePeopleV2* LandscapePeopleV2::create( LandscapeOptions* options )
         node->autorelease();
         return node;
     }
-    CC_SAFE_DELETE(node);
+    AX_SAFE_DELETE(node);
     return nullptr;
 }
 
@@ -122,7 +122,7 @@ void LandscapePeopleV2::Initialise( LandscapeItem* item )
     
     s32 objectid = GET_ID(item->objectid) ;
 
-#if defined(_LOM_)
+#if defined(_LOM_) || defined(_CITADEL_)
     if ( item->riders )
     {
         // LoM shows characters when there is an army in the location in front
@@ -145,12 +145,12 @@ void LandscapePeopleV2::Initialise( LandscapeItem* item )
     
 }
 
-cocos2d::ui::Widget* LandscapePeopleV2::add( std::string& person, int number)
+ax::ui::Widget* LandscapePeopleV2::add( std::string& person, int number)
 {
     int column;
     Widget* imageAdded = nullptr;
     
-#if defined(_LOM_)
+#if defined(_LOM_) || defined(_CITADEL_)
     static int xtable[] = { 3, 5, 4, 1, 2, 6, 0, 7 };
 #endif
 #if defined(_DDR_)

@@ -25,7 +25,7 @@ typedef struct {
 
 #define DEFAULT_PRINT_RIDERS            8
 #define DEFAULT_PRINT_WARRIORS          8
-#if defined(_LOM_)
+#if defined(_LOM_) || defined(_CITADEL_)
 #define DEFAULT_PRINT_DRAGONS           2
 #endif
 #if defined(_DDR_)
@@ -50,7 +50,7 @@ using namespace chilli::types;
 class LandscapePeopleV2 : public LandscapeNode
 {
     using WidgetClickCallback = chilli::ui::WidgetClickCallback;
-    using Widget = cocos2d::ui::Widget;
+    using Widget = ax::ui::Widget;
         
 public:
     static LandscapePeopleV2* create( LandscapeOptions* options );

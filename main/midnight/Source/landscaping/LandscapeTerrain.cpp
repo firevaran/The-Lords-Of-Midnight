@@ -14,7 +14,7 @@
 #include "LandscapeTerrain.h"
 #include "LandscapeDebug.h"
 #include "LandscapeColour.h"
-#include "LandscapePeopleV2.h"
+#include "LandscapePeople.h"
 
 #include "../tme/tme_interface.h"
 #include "../system/tmemanager.h"
@@ -110,9 +110,9 @@ void LandscapeTerrain::Build()
 #endif
             } else {
                 if ( item->people ) {
-                    auto people = LandscapePeopleV2::create(options);
+                    auto people = LandscapePeople::create(options);
                     people->setContentSize( Size( RES(1024), RES(256)) );
-                    people->Initialise(item);
+                    // people->Initialise(item);
                  
                     people->setScale( scale_3qtr * scale);
                     people->setPosition(options->generator->NormaliseXPosition(x), getContentSize().height - y - (RES(96)*scale));
@@ -126,8 +126,6 @@ void LandscapeTerrain::Build()
                     
                     people->setUserObject(imageItem);
                     addChild(people);
- 
-
                 }
             }
         }

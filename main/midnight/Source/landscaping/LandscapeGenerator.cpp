@@ -297,7 +297,7 @@ LandscapeItem* LandscapeGenerator::GetPeople(mxid locId, maplocation& map, Lands
     }
     
     // get the characters infront of us
-#if defined(_LOM_)
+#if defined(_LOM_) || defined(_CITADEL_)
     u32 recruited;
     TME_GetCharacters ( locId, objects, recruited );
 #endif
@@ -329,7 +329,7 @@ LandscapeItem* LandscapeGenerator::GetPeople(mxid locId, maplocation& map, Lands
     }
   
     
-#if defined(_LOM_)
+#if defined(_LOM_) || defined(_CITADEL_)
     //if (item->army || item->lords.Count()) {
         TME_GetLocationInfo(item->loc);
         if ( location_armies.foe_riders )
