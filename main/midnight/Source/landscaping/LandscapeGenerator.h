@@ -41,6 +41,7 @@ typedef enum floor_t {
 class LandscapeItem : public Ref
 {
     using Vec3 = ax::Vec3;
+    using Vec2 = ax::Vec2;
 
 public:
     tme::loc_t  loc;
@@ -61,6 +62,11 @@ public:
     
     s32         id;
     LandscapeItem* linked[8];
+    Vec2        quadCorners[4];
+    bool        quadValid;
+    
+    bool        ahead;
+    bool        current;
 };
 
 using LandscapeItems = ax::Vector<LandscapeItem*>;
@@ -94,7 +100,7 @@ public:
     void BuildPanorama();
     
     //void ProcessQuadrant(s32 x, s32 y, s32 dx, s32 dy, s32 qDim);
-    LandscapeItem* ProcessLocation(s32 x, s32 y);
+    LandscapeItem* ProcessLocation(s32 x, s32 y, s32 id);
     LandscapeItem* CalcCylindricalProjection(LandscapeItem* item);
     float RadiansFromFixedPointAngle(s32 fixed);
     f32 NormaliseXPosition(f32 x);

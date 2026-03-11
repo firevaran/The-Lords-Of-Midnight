@@ -36,6 +36,33 @@ protected:
     SimpleShader* floorShader;
 };
 
+
+class FloorTile : public ax::Sprite
+{
+public:
+    static FloorTile* create(const std::string& frameName)
+    {
+        auto tile = new (std::nothrow) FloorTile();
+        if (tile && tile->initWithSpriteFrameName(frameName))
+        {
+            tile->autorelease();
+            return tile;
+        }
+        AX_SAFE_DELETE(tile);
+        return nullptr;
+    }
+    
+    void setCorners(const ax::Vec2* corners)
+    {
+        // corners: [0]=bl, [1]=br, [2]=tr, [3]=tl
+        _quad.bl.vertices = ax::Vec3(corners[0].x, corners[0].y, 0);
+        _quad.br.vertices = ax::Vec3(corners[1].x, corners[1].y, 0);
+        _quad.tr.vertices = ax::Vec3(corners[2].x, corners[2].y, 0);
+        _quad.tl.vertices = ax::Vec3(corners[3].x, corners[3].y, 0);
+    }
+};
+
+
 #endif /* LandscapeLand_hpp */
 
 /*

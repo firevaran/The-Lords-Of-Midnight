@@ -79,10 +79,9 @@ void LandscapeGenerator::BuildPanorama()
     for ( int y1=y-qDim; y1<=y+qDim; y1++ ) {
         for ( int x1=x-qDim; x1<=x+qDim; x1++ ) {
 
-            auto cell = ProcessLocation(x1, y1);
+            auto cell = ProcessLocation(x1, y1, id);
             if ( cell!= nullptr ) {
                 items->pushBack(cell);
-                cell->id = id;
                 cells[id-1] = cell;
             }
             id++;
@@ -115,7 +114,7 @@ void LandscapeGenerator::BuildPanorama()
     
 }
 
-LandscapeItem* LandscapeGenerator::ProcessLocation(s32 x, s32 y)
+LandscapeItem* LandscapeGenerator::ProcessLocation(s32 x, s32 y, s32 id)
 {
     maplocation     map;
     terraininfo     tinfo;
@@ -125,17 +124,20 @@ LandscapeItem* LandscapeGenerator::ProcessLocation(s32 x, s32 y)
     
     auto locId = MAKE_LOCID(x, y);
     
+    item->id = id;
     item->loc = loc_t(x,y);
     item->floor = floor_none;
     item->army = false;
     item->mist = false;
     item->position = Vec3(0,0,0);
+    item->ahead = (item->loc == options->aheadLocation);
+    item->current = (item->loc == options->currentLocation);
     CLEARARRAY(item->linked);
+        
     
     TME_GetLocation( map, locId );
     TME_GetTerrainInfo ( tinfo, MAKE_ID(INFO_TERRAININFO, map.terrain) );
 
-        
     if ( map.terrain == TN_LAKE3 )
         item->floor = floor_lake;
     else if ( map.terrain == TN_RIVER )
@@ -166,10 +168,8 @@ LandscapeItem* LandscapeGenerator::ProcessLocation(s32 x, s32 y)
     if( map.flags&lf_army && tinfo.flags&tif_army )
         item->army = true;
 
-    if ( !options->isMoving && item->army ) {
-        if (x== options->currentLocation.x && y==options->currentLocation.y)
-            item->army = false;
-    }
+    if ( !options->isMoving && item->army && item->current)
+        item->army = false;
     
     // check the current lords army temporarily
     // popping up as we move in or out of a location
@@ -212,16 +212,12 @@ LandscapeItem* LandscapeGenerator::CalcCylindricalProjection(LandscapeItem* item
     y = (float)( (item->loc.y*LANDSCAPE_DIR_STEPS) - loc.y) / (float)LANDSCAPE_DIR_STEPS;
     
     f32 looking_amount = looking;
-        
     viewAngle = RadiansFromFixedPointAngle( looking_amount );
-
     objAngle = atan2f(x, -y);
-
     angle = objAngle - viewAngle;
 
     if (angle>MX_PI)
         angle -= MX_PI2;
-
     if (angle<-MX_PI)
         angle += MX_PI2;
     
@@ -242,6 +238,88 @@ LandscapeItem* LandscapeGenerator::CalcCylindricalProjection(LandscapeItem* item
     // so place all locations to the right
     if (item->position.x<=LRES(-225))
         item->position.x += PanoramaWidth;
+    
+    // Calculate quad corners in raw projection space
+    // before any NormaliseXPosition is applied
+    item->quadValid = false;
+
+    if (item->position.z >= viewportNear && item->position.z < viewportFar)
+    {
+        const f32 p = 0.5f;
+        f32 gx = item->loc.x;
+        f32 gy = item->loc.y;
+
+        // Project all 4 corners
+        auto projectCorner = [&](f32 cx, f32 cy) -> ax::Vec2
+        {
+            f32 dx = cx - (loc.x / LANDSCAPE_DIR_STEPS);
+            f32 dy = cy - (loc.y / LANDSCAPE_DIR_STEPS);
+
+            f32 dist = sqrtf(dx*dx + dy*dy);
+            if (dist < 0.0001f) dist = 0.0001f;
+
+            f32 cObjAngle  = atan2f(dx, -dy);
+            f32 cAngle     = cObjAngle - viewAngle;
+
+            if (cAngle >  MX_PI) cAngle -= MX_PI2;
+            if (cAngle < -MX_PI) cAngle += MX_PI2;
+
+            f32 screenX = cAngle * PanoramaWidth / MX_PI2 + HorizonCentreX;
+            f32 screenY = (PanoramaHeight / dist) + HorizonCentreY - horizonAdjust;
+            screenY     = std::min(screenY, horizonOffset);
+
+            return ax::Vec2(screenX, screenY);
+        };
+
+        item->quadCorners[0] = projectCorner(gx - p, gy - p);
+        item->quadCorners[1] = projectCorner(gx + p, gy - p);
+        item->quadCorners[2] = projectCorner(gx + p, gy + p);
+        item->quadCorners[3] = projectCorner(gx - p, gy + p);
+
+        // Wraparound: find the median X and shift outlier corners
+        // to be consistent with the group
+        f32 xs[4] = {
+            item->quadCorners[0].x,
+            item->quadCorners[1].x,
+            item->quadCorners[2].x,
+            item->quadCorners[3].x
+        };
+
+         UIDEBUG("Item ID: %d, [0]=%.4f, [1]=%.4f [2]=%.4f, [3]=%.4f",
+            item->id,
+            xs[0],
+            xs[1],
+            xs[2],
+            xs[3]
+        );
+    
+
+        // Use corner[0] as reference, bring others within half panorama of it
+        f32 ref = xs[0];
+        for (int ii = 1; ii < 4; ii++) {
+            while (xs[ii] - ref >  PanoramaWidth * 0.5f) xs[ii] -= PanoramaWidth;
+            while (xs[ii] - ref < -PanoramaWidth * 0.5f) xs[ii] += PanoramaWidth;
+        }
+
+        for (int ii = 0; ii < 4; ii++)
+            item->quadCorners[ii].x = xs[ii];
+
+        item->quadValid = true;
+    }
+    
+    if (item->current) {
+        UIDEBUG("currentLocItem z=%.4f near=%.4f far=%.4f valid=%d",
+            item->position.z,
+            viewportNear, viewportFar,
+            item->quadValid);
+    }
+  
+    if (item->ahead) {
+        UIDEBUG("aheadItem z=%.4f near=%.4f far=%.4f valid=%d",
+            item->position.z,
+            viewportNear, viewportFar,
+            item->quadValid);
+    }
     
     return item;
 }

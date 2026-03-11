@@ -99,7 +99,7 @@ bool LandscapeView::initWithOptions( LandscapeOptions* options )
 
 void LandscapeView::RefreshPositions()
 {
-    if ( options->showLand || options->showWater ) {
+    if ( options->showLand || options->showWater || options->debugMode) {
         auto land = static_cast<LandscapeTerrain*>(this->getChildByName("land"));
         if (land != nullptr) {
             land->RefreshPositions();

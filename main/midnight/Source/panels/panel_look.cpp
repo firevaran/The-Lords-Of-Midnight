@@ -140,7 +140,7 @@ bool panel_look::init()
     options->colour = new LandscapeColour(options);
     options->showWater = false;
     options->showLand = false;
-    options->showTerrain = false ;
+    options->showTerrain = true ;
     options->debugMode = 6; // 6
     options->landScaleX = 1.5f;
     options->landScaleY = 1.5f; //2.8f;
