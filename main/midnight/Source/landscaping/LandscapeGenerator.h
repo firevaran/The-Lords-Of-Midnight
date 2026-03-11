@@ -100,7 +100,7 @@ public:
     f32 NormaliseXPosition(f32 x);
     
     LandscapeItem* GetPeople(mxid locId, maplocation& map, LandscapeItem* item);
-
+    ax::Vec2 CalcGroundProjection(f32 worldX, f32 worldY);
     
 public:
     moonring*           mr;

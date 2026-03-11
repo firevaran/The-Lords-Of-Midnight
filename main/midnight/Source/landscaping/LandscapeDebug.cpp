@@ -54,7 +54,6 @@ void LandscapeDebug::Build()
             
             if ((item->position.z>=options->generator->viewportNear)&&(item->position.z<options->generator->viewportFar))
             {
-                
                 int x = options->generator->NormaliseXPosition(item->position.x);
                 
                 f32 y = item->position.y + horizonOffset ;

@@ -390,3 +390,50 @@ mxterrain_t toGeneralisedTerrain(mxterrain_t t)
             return t;
     }
 }
+
+
+// Projects a raw world-space grid position (in grid units, NOT multiplied by
+// LANDSCAPE_DIR_STEPS) onto the screen ground plane using the same cylindrical
+// projection as CalcCylindricalProjection(), but returns only the screen X/Y
+// at ground level (horizon baseline).
+//
+// worldX, worldY  — grid coordinates of the point to project
+//
+
+ax::Vec2 LandscapeGenerator::CalcGroundProjection(f32 worldX, f32 worldY)
+{
+    // Offset from the player's position (same as CalcCylindricalProjection).
+    f32 x = worldX - (loc.x / LANDSCAPE_DIR_STEPS);
+    f32 y = worldY - (loc.y / LANDSCAPE_DIR_STEPS);
+
+    // Distance — guard against divide-by-zero at the player's own tile.
+    f32 dist = sqrtf(x * x + y * y);
+    if ( dist < 0.0001f )
+        dist = 0.0001f;
+
+    // Cylindrical projection: angle relative to current view direction.
+    f32 viewAngle = RadiansFromFixedPointAngle(looking);
+    f32 objAngle  = atan2f(x, -y);
+    f32 angle     = objAngle - viewAngle;
+
+    if ( angle >  MX_PI ) angle -= MX_PI2;
+    if ( angle < -MX_PI ) angle += MX_PI2;
+
+    // Screen X — identical to CalcCylindricalProjection.
+    f32 screenX = angle * PanoramaWidth / MX_PI2 + HorizonCentreX;
+
+    // Screen Y — ground plane Y at this distance.
+    // PanoramaHeight / dist matches the terrain sprite anchor Y.
+    f32 screenY = (PanoramaHeight / dist) + HorizonCentreY - horizonAdjust;
+
+    // Clamp in panorama space — screenY must never exceed horizonOffset
+    // (the ground plane baseline). Without this, near corners where dist → 0
+    // blow up to huge values, creating V-shaped polys.
+    screenY = std::min(screenY, horizonOffset);
+
+    // Panorama wraparound.
+    if ( screenX <= LRES(-225) )
+        screenX += PanoramaWidth;
+
+    return ax::Vec2(screenX, screenY);
+}

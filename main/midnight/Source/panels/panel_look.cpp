@@ -138,10 +138,10 @@ bool panel_look::init()
     options->mr = GetMoonring();
     options->generator = new LandscapeGenerator();
     options->colour = new LandscapeColour(options);
-    options->showWater = true;
-    options->showLand  = false;
+    options->showWater = false;
+    options->showLand = false;
     options->showTerrain = false ;
-    options->debugMode = 6;
+    options->debugMode = 6; // 6
     options->landScaleX = 1.5f;
     options->landScaleY = 1.5f; //2.8f;
     options->debugLand=false;

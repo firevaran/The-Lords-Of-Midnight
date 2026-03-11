@@ -182,7 +182,7 @@ public:
 #define COMPLAIN    moonring::complain
 
 //#ifdef MX_DEBUG
-//#define UIDEBUG        moonring::log
+#define UIDEBUG        moonring::log
 //#else
-#define UIDEBUG        if(0) printf
+//#define UIDEBUG        if(0) printf
 //#endif
