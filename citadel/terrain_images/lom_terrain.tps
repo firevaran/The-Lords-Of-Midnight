@@ -197,6 +197,9 @@
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
             <key type="filename">dot.png</key>
+            <key type="filename">floor_mask0.png</key>
+            <key type="filename">floor_mask1.png</key>
+            <key type="filename">floor_mask2.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -376,6 +379,21 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">t_land0.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>247,28,493,55</rect>
+                <key>scale9Paddings</key>
+                <rect>247,28,493,55</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">t_lith0.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -410,21 +428,6 @@
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,1</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>256,156,512,312</rect>
-                <key>scale9Paddings</key>
-                <rect>256,156,512,312</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">t_mountain0a.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
                 <key>spriteScale</key>
                 <double>1</double>
                 <key>scale9Enabled</key>
@@ -522,7 +525,10 @@
                     <filename>dot.png</filename>
                     <filename>sky.png</filename>
                     <filename>t_lith1.png</filename>
-                    <filename>t_mountain0a.png</filename>
+                    <filename>t_land0.png</filename>
+                    <filename>floor_mask0.png</filename>
+                    <filename>floor_mask1.png</filename>
+                    <filename>floor_mask2.png</filename>
                 </array>
             </struct>
         </map>
@@ -531,9 +537,7 @@
         <key>replaceList</key>
         <array/>
         <key>ignoredWarnings</key>
-        <array>
-            <string>cocos2dx-shader-precisition</string>
-        </array>
+        <array/>
         <key>commonDivisorX</key>
         <uint>1</uint>
         <key>commonDivisorY</key>
