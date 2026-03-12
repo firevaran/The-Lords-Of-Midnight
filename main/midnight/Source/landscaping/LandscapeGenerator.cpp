@@ -271,6 +271,7 @@ LandscapeItem* LandscapeGenerator::CalcCylindricalProjection(LandscapeItem* item
             return ax::Vec2(screenX, screenY);
         };
 
+
         item->quadCorners[0] = projectCorner(gx - p, gy - p);
         item->quadCorners[1] = projectCorner(gx + p, gy - p);
         item->quadCorners[2] = projectCorner(gx + p, gy + p);
@@ -285,13 +286,13 @@ LandscapeItem* LandscapeGenerator::CalcCylindricalProjection(LandscapeItem* item
             item->quadCorners[3].x
         };
 
-         UIDEBUG("Item ID: %d, [0]=%.4f, [1]=%.4f [2]=%.4f, [3]=%.4f",
-            item->id,
-            xs[0],
-            xs[1],
-            xs[2],
-            xs[3]
-        );
+//         UIDEBUG("Item ID: %d, [0]=%.4f, [1]=%.4f [2]=%.4f, [3]=%.4f",
+//            item->id,
+//            xs[0],
+//            xs[1],
+//            xs[2],
+//            xs[3]
+//        );
     
 
         // Use corner[0] as reference, bring others within half panorama of it
@@ -307,19 +308,19 @@ LandscapeItem* LandscapeGenerator::CalcCylindricalProjection(LandscapeItem* item
         item->quadValid = true;
     }
     
-    if (item->current) {
-        UIDEBUG("currentLocItem z=%.4f near=%.4f far=%.4f valid=%d",
-            item->position.z,
-            viewportNear, viewportFar,
-            item->quadValid);
-    }
-  
-    if (item->ahead) {
-        UIDEBUG("aheadItem z=%.4f near=%.4f far=%.4f valid=%d",
-            item->position.z,
-            viewportNear, viewportFar,
-            item->quadValid);
-    }
+//    if (item->current) {
+//        UIDEBUG("currentLocItem z=%.4f near=%.4f far=%.4f valid=%d",
+//            item->position.z,
+//            viewportNear, viewportFar,
+//            item->quadValid);
+//    }
+//  
+//    if (item->ahead) {
+//        UIDEBUG("aheadItem z=%.4f near=%.4f far=%.4f valid=%d",
+//            item->position.z,
+//            viewportNear, viewportFar,
+//            item->quadValid);
+//    }
     
     return item;
 }
