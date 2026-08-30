@@ -87,6 +87,9 @@ void LandscapeDebug::Build()
                     case 6:
                         snprintf(buffer, NUMELE(buffer), "%d", item->id);
                         break;
+                    case 7:
+                        snprintf(buffer, NUMELE(buffer), "%d", item->tilemask);
+                        break;
 
                     default:
                         break;

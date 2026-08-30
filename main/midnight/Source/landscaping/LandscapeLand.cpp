@@ -200,6 +200,13 @@ bool LandscapeLand::QuadIsValid( Vec2* corners )
 
 void LandscapeLand::DrawFloorTiles()
 {
+    static const char* tile_names[] = {
+        "land__0001_Isolated",  // none  - 4 corners
+        "land__0004_Open",      // solid - 0 corners
+        "land__0002_Edge",      // edge  - 2 corners
+        "land__0004_Open",      // solid - 0 corners
+    };
+    
     auto items = options->generator->items;
     auto container = getChildByName(FLOOR_TILE_NAME);
 
@@ -209,22 +216,23 @@ void LandscapeLand::DrawFloorTiles()
             
         if ( item->floor == floor_none || item->floor == floor_normal )
             continue;
+            
+        if ( item->tile == nullptr )
+            continue;
 
         if ( item->position.z < options->generator->viewportNear ||
              item->position.z >= options->generator->viewportFar )
             continue;
 
+        auto c = palette[(int)item->floor];
+        auto tile = FloorTile::create(tile_names[(int)item->tile->type], item->tile->rotation, c);
+        if ( tile == nullptr )
+            continue;
 
         Vec2 corners[4];
         CalcQuadCorners(item, corners);
-
-        int floorIdx = (int)item->floor;
-        auto c = palette[floorIdx];
-
-        auto tile = FloorTile::create("floor_mask0", c);
-        if ( tile == nullptr )
-            continue;
         tile->setCorners(corners);
+        
         container->addChild(tile);
     }
 }

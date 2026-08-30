@@ -141,7 +141,7 @@ bool panel_look::init()
     options->showWater = true;
     options->showLand = true;
     options->showTerrain = true ;
-    options->debugMode = 0; // 6
+    options->debugMode = 7; // 6
     options->landScaleX = 1.5f;
     options->landScaleY = 1.5f; //2.8f;
     options->debugLand=false;

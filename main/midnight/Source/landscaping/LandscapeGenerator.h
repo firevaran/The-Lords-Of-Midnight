@@ -37,6 +37,18 @@ typedef enum floor_t {
     , floor_debug
 } floor_t ;
 
+typedef enum class tile_type {
+    None        = 0,
+    Solid       = 1,
+    Edge        = 2,
+    Corner      = 3,
+} tile_type;
+
+typedef struct tile_def_t {
+    tile_type       type;
+    int             rotation; // 0,1,2,3 = 0,90,180,270 clockwise
+} tile_def_t;
+
 
 class LandscapeItem : public Ref
 {
@@ -61,9 +73,12 @@ public:
     c_mxid      lords;
     
     s32         id;
-    LandscapeItem* linked[8];
-    Vec2        quadCorners[4];
-    bool        quadValid;
+    
+    LandscapeItem*  linked[8];
+    Vec2            quadCorners[4];
+    bool            quadValid;
+    const tile_def_t*       tile;
+    int             tilemask;
     
     bool        ahead;
     bool        current;
@@ -107,6 +122,10 @@ public:
     
     LandscapeItem* GetPeople(mxid locId, maplocation& map, LandscapeItem* item);
     ax::Vec2 CalcGroundProjection(f32 worldX, f32 worldY);
+    
+protected:
+    const tile_def_t* CalcTileMask( LandscapeItem* item );
+
     
 public:
     moonring*           mr;

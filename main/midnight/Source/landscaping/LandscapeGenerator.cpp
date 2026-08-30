@@ -8,6 +8,7 @@ USING_NS_TME;
 
 mxterrain_t toGeneralisedTerrain(mxterrain_t t);
 
+
 LandscapeGenerator::LandscapeGenerator() :
     options(nullptr),
     items(new Vector<LandscapeItem*>()),
@@ -106,6 +107,10 @@ void LandscapeGenerator::BuildPanorama()
         COPY(ii+18,7);
     }
  
+    for (auto const& item : *items) {
+        item->tile = CalcTileMask(item);
+    }
+ 
  
     sort( items->begin( ), items->end( ), [ ]( const LandscapeItem* lhs, const LandscapeItem* rhs )
     {
@@ -132,6 +137,7 @@ LandscapeItem* LandscapeGenerator::ProcessLocation(s32 x, s32 y, s32 id)
     item->position = Vec3(0,0,0);
     item->ahead = (item->loc == options->aheadLocation);
     item->current = (item->loc == options->currentLocation);
+    item->tile = nullptr;
     CLEARARRAY(item->linked);
         
     
@@ -515,4 +521,46 @@ ax::Vec2 LandscapeGenerator::CalcGroundProjection(f32 worldX, f32 worldY)
         screenX += PanoramaWidth;
 
     return ax::Vec2(screenX, screenY);
+}
+
+// index is the 4-bit bitmask: bit0=N, bit1=E, bit2=S, bit3=W
+static const tile_def_t tile_def_table[16] = {
+    { tile_type::None,  0 },  // 0000 -  0 - no connections
+    { tile_type::Edge,  0 },  // 0001 -  1 - N
+    { tile_type::Edge,  1 },  // 0010 -  2 - E
+    { tile_type::Corner,0 },  // 0011 -  3 - N+E
+    { tile_type::Edge,  2 },  // 0100 -  4 - S
+    { tile_type::Solid, 0 },  // 0101 -  5 - N+S
+    { tile_type::Solid, 1 },  // 0110 -  6 - E+S
+    { tile_type::Solid, 0 },  // 0111 -  7 - N+E+S
+    { tile_type::Edge,  3 },  // 1000 -  8 - W
+    { tile_type::Corner,3 },  // 1001 -  9 - W+N
+    { tile_type::Solid, 1 },  // 1010 - 10 - E+W
+    { tile_type::Solid, 3 },  // 1011 - 11 - E+S+W
+    { tile_type::Corner,2 },  // 1100 - 12 - S+W
+    { tile_type::Solid, 2 },  // 1101 - 13 - S+W+N
+    { tile_type::Solid, 1 },  // 1110 - 14 - W+N+E
+    { tile_type::Solid, 0 },  // 1111 - 15 - all
+};
+
+bool isWater( LandscapeItem* item ) {
+    if (item==nullptr) return false;
+    return (item->floor == floor_lake || item->floor == floor_river);
+}
+
+const tile_def_t* LandscapeGenerator::CalcTileMask( LandscapeItem* item )
+{
+    if (!isWater(item)) return nullptr;
+        
+    u8 mask = 0;
+    
+    // linked[1]=N, linked[4]=E, linked[6]=S, linked[3]=W
+    if ( isWater(item->linked[1]) ) mask |= 1; // N
+    if ( isWater(item->linked[4]) ) mask |= 2; // E
+    if ( isWater(item->linked[6]) ) mask |= 4; // S
+    if ( isWater(item->linked[3]) ) mask |= 8; // W
+    
+    item->tilemask = mask;
+    item->tile = &tile_def_table[mask];
+    return item->tile;
 }

@@ -44,10 +44,10 @@ class FloorTile : public ax::Node
     using Color4B     = ax::Color4B;
 
 public:
-    static FloorTile* create(const std::string& frameName, const ax::Color4F& colour)
+    static FloorTile* create(const std::string& frameName, int rotation, const ax::Color4F& colour)
     {
         auto tile = new (std::nothrow) FloorTile();
-        if (tile && tile->init(frameName, colour))
+        if (tile && tile->init(frameName, rotation, colour))
         {
             tile->autorelease();
             return tile;
@@ -89,7 +89,7 @@ void draw(ax::Renderer* renderer, const ax::Mat4& transform, uint32_t flags) ove
 }
 
 protected:
-    bool init(const std::string& frameName, const ax::Color4F& colour)
+    bool init(const std::string& frameName, int rotation, const ax::Color4F& colour)
     {
         if (!Node::init())
             return false;
@@ -116,10 +116,24 @@ protected:
 
         Color4B c(colour);
 
-        _verts[0] = { ax::Vec3(0,0,0), c, Tex2F(u0, v0) }; // tl
-        _verts[1] = { ax::Vec3(0,0,0), c, Tex2F(u1, v0) }; // tr
-        _verts[2] = { ax::Vec3(0,0,0), c, Tex2F(u1, v1) }; // br
-        _verts[3] = { ax::Vec3(0,0,0), c, Tex2F(u0, v1) }; // bl
+        // UVs for each corner: tl, tr, br, bl
+        Tex2F uvBase[4] = {
+            Tex2F(u0,v0), // tl
+            Tex2F(u1,v0), // tr
+            Tex2F(u1,v1), // br
+            Tex2F(u0,v1), // bl
+        };
+    
+
+        // _verts[0] = { ax::Vec3(0,0,0), c, Tex2F(u0, v0) }; // tl
+        // _verts[1] = { ax::Vec3(0,0,0), c, Tex2F(u1, v0) }; // tr
+        // _verts[2] = { ax::Vec3(0,0,0), c, Tex2F(u1, v1) }; // br
+        // _verts[3] = { ax::Vec3(0,0,0), c, Tex2F(u0, v1) }; // bl
+
+        // rotate clockwise by shifting UV index
+        for (int ii = 0; ii < 4; ii++) {
+            _verts[ii] = { ax::Vec3(0,0,0), c, uvBase[(ii + rotation) % 4] };
+        }
 
 
         auto program = ax::ProgramManager::getInstance()->getBuiltinProgram(

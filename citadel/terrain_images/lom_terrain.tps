@@ -197,9 +197,6 @@
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
             <key type="filename">dot.png</key>
-            <key type="filename">floor_mask0.png</key>
-            <key type="filename">floor_mask1.png</key>
-            <key type="filename">floor_mask2.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -526,9 +523,6 @@
                     <filename>sky.png</filename>
                     <filename>t_lith1.png</filename>
                     <filename>t_land0.png</filename>
-                    <filename>floor_mask0.png</filename>
-                    <filename>floor_mask1.png</filename>
-                    <filename>floor_mask2.png</filename>
                 </array>
             </struct>
         </map>
