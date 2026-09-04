@@ -25,7 +25,7 @@ typedef struct {
 
 #define DEFAULT_PRINT_RIDERS            8
 #define DEFAULT_PRINT_WARRIORS          8
-#if defined(_LOM_)
+#if defined(_LOM_) || defined(_CITADEL_)
 #define DEFAULT_PRINT_DRAGONS           2
 #endif
 #if defined(_DDR_)
