@@ -4,6 +4,7 @@
 #include "../../baseinc/tme_internal.h"
 #include "../default/default_scenario_internal.h"
 
+#if defined(_LOM_)
 namespace tme {
 
     class lom_x : public mxscenario    
@@ -56,6 +57,7 @@ namespace tme {
     
     #define LOM_SCENARIO(x) static_cast<lom_x*>(mx->scenario)->x
 }
+#endif
 
 #endif //_LOMSCENARIO_INTERNAL_H_INCLUDED_
 

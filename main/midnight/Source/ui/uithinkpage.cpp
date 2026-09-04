@@ -16,7 +16,7 @@
 #include "../frontend/layout_id.h"
 #include "../frontend/keyboard_id.h"
 
-#if defined(_LOM_)
+#if defined(_LOM_) || defined(_CITADEL_)
 #define NAME_X              32
 #define NAME_Y              32
 #define TEXT_X              32
@@ -131,7 +131,7 @@ void uithinkpage::setObject( mxid id, mxid objectId, panelmode_t mode )
     approach->setEnabled(this->approach);
     scrollView->addChild(approach);
     
-#if defined(_LOM_)
+#if defined(_LOM_) || defined(_CITADEL_)
     // Unhide
     auto unhide = uihelper::CreateImageButton("i_unhide", ID_UNHIDE, clickCallback);
     unhide->setPosition(pos);
@@ -206,7 +206,7 @@ void uithinkpage::setObject( mxid id, mxid objectId, panelmode_t mode )
                                          -(postMen->getContentSize().height/2)-RES(2));
 
     // object
-#if defined(_LOM_)
+#if defined(_LOM_) || defined(_CITADEL_)
     y = RES(OBJECT_Y) - imgObject->getContentSize().height;
     x = RES(OBJECT_X) - (imgObject->getContentSize().width/2);
   
@@ -311,7 +311,7 @@ bool uithinkpage::init()
     scrollView->addChild(imgCharacter);
 
     // Object Image
-#if defined(_LOM_)
+#if defined(_LOM_) || defined(_CITADEL_)
     // create image for object
     imgObject = ImageView::create();
     scrollView->addChild(imgObject);
@@ -402,7 +402,7 @@ void uithinkpage::setImageColour(Sprite* node)
 
 void uithinkpage::displayObject ( mxid objectid )
 {
-#if defined(_LOM_)
+#if defined(_LOM_) || defined(_CITADEL_)
     if ( objectid == IDT_NONE ) {
         imgObject->setVisible(false);
         return;
@@ -459,7 +459,7 @@ void uithinkpage::setupUIElements()
     switch ( mode ) {
             
         case MODE_THINK:
-#if defined(_LOM_)
+#if defined(_LOM_) || defined(_CITADEL_)
             if ( Character_IsHidden(c) ) {
                 text = TME_GetSystemString(c,SS_HIDDEN);
                 unhide = flags&lif_unhide;
@@ -589,7 +589,7 @@ void uithinkpage::checkPerson ( void )
         enterTunnel = location_flags.Is(lif_enter_tunnel);
     }
         
-#if defined(_LOM_)
+#if defined(_LOM_) || defined(_CITADEL_)
     aheadOrHere ( text, c.location, true );
 #endif
     
@@ -606,7 +606,7 @@ void uithinkpage::checkPerson ( void )
         
         msg = Character_IsRecruited(c) ? SS_MESSAGE4 : SS_MESSAGE7 ;
         
-#if defined(_LOM_)
+#if defined(_LOM_) || defined(_CITADEL_)
         if ( c.id == TME_GetId("CH_MIDWINTER", IDT_CHARACTER))
             msg = SS_MESSAGE8;
 #endif

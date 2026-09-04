@@ -35,7 +35,11 @@
 
 //#define _TME_CHEAT_MODE_
 
-#if defined(_LOM_)
+#if defined(_CITADEL_)
+//#define _CITADEL_TEST_WATER_MAP_       1
+#endif
+
+#if defined(_LOM_) || defined(_CITADEL_)
     #define PRE_RENDERED_LORD_NAMES
 #endif
 

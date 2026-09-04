@@ -115,6 +115,8 @@ void AppDelegate::InitialisePaths()
     snprintf( main_path, NUMELE(main_path), "all/%s/screens/%d", resfolder.c_str(), res->Aspect() );
     searchPaths.push_back(main_path);
     
+    sprintf( main_path, "%s", scenario.c_str());
+    searchPaths.push_back(main_path);
     
     fileutils->setSearchPaths(searchPaths);
 }

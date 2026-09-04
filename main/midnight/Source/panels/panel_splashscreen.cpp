@@ -51,7 +51,7 @@ bool panel_splashscreen::init()
      
     auto background = setBackgroundToHeight("screens/0/splash.png",false);
 
-#if defined(_LOM_)
+#if defined(_LOM_) || defined(_CITADEL_)
     TTFConfig font_config_splash;
 
     font_config_splash.fontFilePath = FONT_FILENAME;

@@ -5,7 +5,7 @@
 #include "../../baseinc/processor_battle.h"
 #include "scenario_lom_internal.h"
 
-#if defined(_LOM_)
+#if defined(_LOM_) || defined(_CITADEL_)
 namespace tme {
 
     class lom_battle : public mxbattle

@@ -186,7 +186,7 @@ ax::ui::Widget* LandscapePeople::add( std::string& person, int number)
     int column;
     Widget* imageAdded = nullptr;
     
-#if defined(_LOM_)
+#if defined(_LOM_) || defined(_CITADEL_)
     static int xtable[] = { 3, 5, 4, 1, 2, 6, 0, 7 };
 #endif
 #if defined(_DDR_)

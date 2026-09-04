@@ -56,7 +56,7 @@ void LandscapeColour::updateCharacterNode( Node* node )
     
     shader->AttachShader(node, options->characterTimeShader);
 
-#if defined(_LOM_)
+#if defined(_LOM_) || defined(_CITADEL_)
     auto normalcolour = Vec4(0,(5.0f/255.0f),(78.0f/255.0f),alpha_normal);
     auto tunnelcolour = Vec4((64.0f/255.0f),(64.0f/255.0f),0,alpha_normal);
 #endif

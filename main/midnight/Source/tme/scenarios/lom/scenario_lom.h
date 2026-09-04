@@ -3,7 +3,7 @@
 
 #include "../../tme.h"
 
-
+#if defined(_LOM_)
 namespace tme {
 
     class lom  : public mxscenario_i
@@ -21,8 +21,7 @@ namespace tme {
         static MXRESULT MXAPI Create ( tme::mxinterface* mx );
 
     };
-
-    
 }
+#endif
 
 #endif //_LOMSCENARIO_H_INCLUDED_

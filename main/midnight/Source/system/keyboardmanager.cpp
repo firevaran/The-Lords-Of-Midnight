@@ -32,7 +32,7 @@ static keycode_t keyboard_map[][K_MAP_MAX] = {
         , KEYCODE(M) // K_SELECT
         , KEYCODE(R) // K_THINK
         , KEYCODE(T) // K_CHOOSE
-#if defined(_LOM_)
+#if defined(_LOM_) || defined(_CITADEL_)
         , KEYCODE(1) // K_SEEK
         , KEYCODE(2) // K_HIDE,
         , KEYCODE(2) // K_UNHIDE,
@@ -70,7 +70,7 @@ static keycode_t keyboard_map[][K_MAP_MAX] = {
         , KEYCODE(S) // K_SELECT
         , KEYCODE(T) // K_THINK
         , KEYCODE(C) // K_CHOOSE
-#if defined(_LOM_)
+#if defined(_LOM_) || defined(_CITADEL_)
         , KEYCODE(K) // K_SEEK
         , KEYCODE(H) // K_HIDE,
         , KEYCODE(U) // K_UNHIDE,

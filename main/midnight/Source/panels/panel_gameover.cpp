@@ -55,7 +55,7 @@ void panel_gameover::OnShown()
     lblDescription->setHorizontalAlignment(TextHAlignment::CENTER);
     safeArea->addChild(lblDescription);
 
-#if defined(_LOM_)
+#if defined(_LOM_) || defined(_CITADEL_)
     if ( currentmode == MODE_WIN ) {
         setBackgroundToWidth( "screens/misc/win.png" );
         lblDescription->enableOutline(Color4B(_clrRed,ALPHA(0.75f)),RES(2));

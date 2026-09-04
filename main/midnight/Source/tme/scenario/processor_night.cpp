@@ -45,7 +45,7 @@ namespace tme {
                 character->InitNightProcessing();
             }
 
-#ifdef _LOM_
+#if defined(_LOM_) || defined(_CITADEL_)
             SetSpecialLocationsCharacter();
             SetSpecialLocationsStrongholds();
 

@@ -154,7 +154,7 @@ namespace tme {
                 flags.Set(lif_blocked); // = TRUE
             }
 
-#if defined(_LOM_)
+#if defined(_LOM_) || defined(_CITADEL_)
             // we can't enter another battle while we are in one, which we must be
             // if we are in the same location as the enemy
             if ( foe.armies || foe.characters  )
@@ -234,7 +234,7 @@ namespace tme {
 
                 // TODO check global flag AlwaysAttemptRecruit
                 // and maybe set the character up for recruit anyway
-#if defined(_LOM_)
+#if defined(_LOM_) || defined(_CITADEL_)
                 if ( owner->CheckRecruitChar ( character ) )
                     objRecruit += character ;
 #else

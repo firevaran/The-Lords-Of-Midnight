@@ -30,7 +30,7 @@ USING_NS_AX_UI;
 
 
 
-#if defined(_LOM_)
+#if defined(_LOM_) || defined(_CITADEL_)
 #define _USE_GAME_RULES_
 static uitextmenuitem items_rules[] = {
     { ID_OPTION_DIFFICULTY,             {OPTIONS_SCREEN_DIFFICULTY},            KEYCODE(1), KEYBOARD_KEY_1, TB_DOUBLE },
@@ -227,7 +227,7 @@ static uitextmenuitem items_game[] = {
     { ID_OPTION_BATTLE_FULL,            {OPTIONS_SCREEN_BATTLEREPORT},          KEYCODE(2), KEYBOARD_KEY_2, TB_DOUBLE },
     { ID_OPTION_NIGHT_CONFIRM,          {OPTIONS_SCREEN_NIGHTCONFIRM},          KEYCODE(3), KEYBOARD_KEY_3, TB_DOUBLE },
     { ID_OPTION_APPROACH,               {OPTIONS_SCREEN_APPROACH},              KEYCODE(4), KEYBOARD_KEY_4, TB_DOUBLE },
-#if defined(_LOM_)
+#if defined(_LOM_) || defined(_CITADEL_)
     { ID_OPTION_AUTO_FIGHT,             {OPTIONS_SCREEN_AUTOFIGHT},             KEYCODE(5), KEYBOARD_KEY_5, TB_DOUBLE },
     { ID_OPTION_AUTO_UNHIDE,            {OPTIONS_SCREEN_AUTOUNHIDE},            KEYCODE(6), KEYBOARD_KEY_6, TB_DOUBLE },
     { ID_OPTION_AUTO_SEEK,              {OPTIONS_SCREEN_AUTOSEEK},              KEYCODE(7), KEYBOARD_KEY_7, TB_DOUBLE },
@@ -638,7 +638,7 @@ void panel_options::SetValues()
 void panel_options::checkDisabledRules()
 {
 #if defined(_USE_GAME_RULES_)
-    #if defined(_LOM_)
+    #if defined(_LOM_) || defined(_CITADEL_)
     clearRule(ID_OPTION_RULE_3, mr->settings->game_rules.Is(RF_IMPASSABLE_MOUNTAINS));
     clearRule(ID_OPTION_RULE_4, mr->settings->game_rules.Is(RF_IMPASSABLE_MOUNTAINS));
     #endif

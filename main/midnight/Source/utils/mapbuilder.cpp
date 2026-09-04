@@ -408,6 +408,7 @@ mapbuilder* mapbuilder::updateLayers()
         if ( visible ) {
             
             // Terrain
+            
             TME_GetTerrainInfo(t,MAKE_ID(IDT_TERRAININFO,m->terrain));
             terrain_data_t* d = (terrain_data_t*)t.userdata ;
      

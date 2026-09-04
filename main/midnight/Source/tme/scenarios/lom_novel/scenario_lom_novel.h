@@ -4,7 +4,7 @@
 #include "../../tme.h"
 #include "../lom/scenario_lom.h"
 
-
+#if defined(_LOM_)
 namespace tme {
 
     class lom_novel  : public lom
@@ -19,5 +19,6 @@ namespace tme {
 
     };
 }
+#endif
 
 #endif //_LOM_NOVEL_SCENARIO_H_INCLUDED_

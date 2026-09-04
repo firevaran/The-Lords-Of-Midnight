@@ -535,7 +535,7 @@ namespace tme {
                 return MX_FAILED;
             }
 
-#if defined(_LOM_)
+#if defined(_LOM_) || defined(_CITADEL_)
             // if there is an army here
             // you can only move first thing
             if ( !sv_cheat_armies_noblock ) {
@@ -1524,7 +1524,7 @@ namespace tme {
 
             }
 
-#if defined(_LOM_)
+#if defined(_LOM_) || defined(_CITADEL_)
             if ( oinfo && oinfo->MapRemove() && removeObject ) {
                 mapsqr.RemoveObject();
             }
@@ -1591,7 +1591,7 @@ namespace tme {
             }
 #endif
             
-#if defined(_LOM_)
+#if defined(_LOM_) || defined(_CITADEL_)
             if( oldobject ) {
                 MXTRACE("    %s drops object %s", Longname().c_str(), oldobject->name.c_str());
                 mx->scenario->DropObject ( Location(), oldobject );
@@ -1751,7 +1751,7 @@ namespace tme {
             out->shortname = std::string(shortname);
 
 
-#if defined(_LOM_)
+#if defined(_LOM_) || defined(_CITADEL_)
             out->warriors = MAKE_ARMYID(UT_WARRIORS,SafeId(this));
             out->riders = MAKE_ARMYID(UT_RIDERS,SafeId(this));
 #endif
